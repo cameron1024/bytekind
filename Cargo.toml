@@ -5,6 +5,7 @@ edition = "2021"
 
 license = "MIT"
 repo = "https://github.com/cameron1024/bytekind"
+description = "Containers for byte arrays that are generic over their serialization format"
 
 
 [dependencies]
