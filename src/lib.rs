@@ -31,11 +31,13 @@ pub trait Format {}
 
 #[cfg(feature = "hex")]
 /// Format bytes as a hex string
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default, Hash)]
 pub struct HexString;
 #[cfg(feature = "hex")]
 impl Format for HexString {}
 
 /// Format bytes as plain bytes (i.e. what you'd get if you just `derive(Serialize)`)
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default, Hash)]
 pub struct Plain;
 impl Format for Plain {}
 

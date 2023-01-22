@@ -6,12 +6,11 @@ use core::{
 
 use crate::Format;
 
-mod serde;
 #[cfg(feature = "proptest")]
 mod proptest;
+mod serde;
 
 /// A wrapper around `Vec<u8>` that allows control over the serialization format
-#[derive(Clone)]
 pub struct Bytes<F: Format> {
     inner: Vec<u8>,
     _marker: PhantomData<F>,
@@ -22,6 +21,15 @@ impl<F: Format> Debug for Bytes<F> {
         f.debug_struct("Bytes")
             .field("inner", &self.inner)
             .finish_non_exhaustive()
+    }
+}
+
+impl<F: Format> Clone for Bytes<F> {
+    fn clone(&self) -> Self {
+        Self {
+            inner: self.inner.clone(),
+            _marker: PhantomData,
+        }
     }
 }
 
@@ -157,4 +165,13 @@ impl<F: Format> Bytes<F> {
             _marker: PhantomData,
         }
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::Plain;
+
+    use super::*;
+
+    static_assertions::assert_impl_all!(Bytes<Plain>: Debug, Clone, PartialEq, Eq);
 }
