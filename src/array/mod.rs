@@ -1,14 +1,15 @@
 use core::fmt::{Debug, Formatter};
+use core::hash::Hash;
 use core::marker::PhantomData;
 
 use crate::Format;
 
-mod serde;
 #[cfg(feature = "proptest")]
 mod proptest;
+mod serde;
 
 /// A wrapper around `[u8; N]` that allows control over the serialization format
-#[derive(Clone, Copy)]
+#[derive(Copy)]
 pub struct ByteArray<F: Format, const N: usize> {
     inner: [u8; N],
     _marker: PhantomData<F>,
@@ -19,6 +20,14 @@ impl<F: Format, const N: usize> Debug for ByteArray<F, N> {
         f.debug_struct("ByteArray")
             .field("inner", &self.inner)
             .finish_non_exhaustive()
+    }
+}
+impl<F: Format, const N: usize> Clone for ByteArray<F, N> {
+    fn clone(&self) -> Self {
+        Self {
+            inner: self.inner.clone(),
+            _marker: PhantomData,
+        }
     }
 }
 
@@ -54,12 +63,30 @@ impl<F: Format, const N: usize> PartialEq<[u8]> for ByteArray<F, N> {
     }
 }
 
+impl<F: Format, const N: usize> PartialOrd for ByteArray<F, N> {
+    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
+        <[u8; N]>::partial_cmp(&self.inner, &other.inner)
+    }
+}
+
+impl<F: Format, const N: usize> Ord for ByteArray<F, N> {
+    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
+        <[u8; N]>::cmp(&self.inner, &other.inner)
+    }
+}
+
 impl<F: Format, const N: usize> From<[u8; N]> for ByteArray<F, N> {
     fn from(inner: [u8; N]) -> Self {
         Self {
             inner,
             _marker: PhantomData,
         }
+    }
+}
+
+impl<F: Format, const N: usize> Hash for ByteArray<F, N> {
+    fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
+        <[u8; N]>::hash(&self.inner, state);
     }
 }
 

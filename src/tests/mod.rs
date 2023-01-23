@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::{from_value, json, to_value};
 
-use crate::{Bytes, HexString, Plain};
+use crate::{ByteArray, Bytes, Format, HexString, Plain};
 
 #[test]
 fn simple_example() {
@@ -23,4 +23,24 @@ fn simple_example() {
 
     let value_again = to_value(&Foo { hex, plain }).unwrap();
     assert_eq!(value, value_again);
+}
+
+#[test]
+fn implements_traits() {
+    fn foo<T>(_t: T)
+    where
+        T: std::fmt::Debug + Clone + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash,
+    {
+    }
+
+    foo(Bytes::<Plain>::from(vec![1, 2, 3]));
+    foo(Bytes::<HexString>::from(vec![1, 2, 3]));
+
+    foo(ByteArray::<Plain, 3>::from([1, 2, 3]));
+    foo(ByteArray::<HexString, 3>::from([1, 2, 3]));
+
+    fn _has_generic<F: Format>() {
+        foo(Bytes::<F>::from(vec![1, 2, 3]));
+        foo(ByteArray::<F, 3>::from([1, 2, 3]));
+    }
 }

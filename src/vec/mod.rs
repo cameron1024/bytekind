@@ -1,5 +1,6 @@
 use core::{
     fmt::{Debug, Formatter},
+    hash::Hash,
     marker::PhantomData,
     ops::{Deref, DerefMut},
 };
@@ -127,6 +128,24 @@ impl<F: Format> DerefMut for Bytes<F> {
     #[inline]
     fn deref_mut(&mut self) -> &mut Self::Target {
         self.inner.deref_mut()
+    }
+}
+
+impl<F: Format> PartialOrd for Bytes<F> {
+    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
+        Vec::<u8>::partial_cmp(&self.inner, &other.inner)
+    }
+}
+
+impl<F: Format> Ord for Bytes<F> {
+    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
+        Vec::<u8>::cmp(&self.inner, &other.inner)
+    }
+}
+
+impl<F: Format> Hash for Bytes<F> {
+    fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
+        Vec::<u8>::hash(&self.inner, state)
     }
 }
 
