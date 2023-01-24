@@ -70,6 +70,13 @@ impl<F: Format> From<Vec<u8>> for Bytes<F> {
     }
 }
 
+impl<F: Format> From<Bytes<F>> for Vec<u8> {
+    #[inline]
+    fn from(bytes: Bytes<F>) -> Self {
+        bytes.inner 
+    }
+}
+
 impl<F: Format> FromIterator<u8> for Bytes<F> {
     #[inline]
     fn from_iter<T: IntoIterator<Item = u8>>(iter: T) -> Self {

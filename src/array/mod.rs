@@ -84,6 +84,12 @@ impl<F: Format, const N: usize> From<[u8; N]> for ByteArray<F, N> {
     }
 }
 
+impl<F: Format, const N: usize> From<ByteArray<F, N>> for [u8; N] {
+    fn from(array: ByteArray<F, N>) -> Self {
+        array.inner 
+    }
+}
+
 impl<F: Format, const N: usize> Hash for ByteArray<F, N> {
     fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
         <[u8; N]>::hash(&self.inner, state);
