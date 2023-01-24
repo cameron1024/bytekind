@@ -98,6 +98,30 @@ impl<F: Format, const N: usize> ByteArray<F, N> {
     }
 }
 
+impl<F: Format, const N: usize> AsRef<[u8]> for ByteArray<F, N> {
+    fn as_ref(&self) -> &[u8] {
+        &self.inner
+    }
+}
+
+impl<F: Format, const N: usize> AsMut<[u8]> for ByteArray<F, N> {
+    fn as_mut(&mut self) -> &mut [u8] {
+        &mut self.inner
+    }
+}
+
+impl<F: Format, const N: usize> AsRef<[u8; N]> for ByteArray<F, N> {
+    fn as_ref(&self) -> &[u8; N] {
+        &self.inner
+    }
+}
+
+impl<F: Format, const N: usize> AsMut<[u8; N]> for ByteArray<F, N> {
+    fn as_mut(&mut self) -> &mut [u8; N] {
+        &mut self.inner
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::Plain;

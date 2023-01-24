@@ -29,7 +29,15 @@ fn simple_example() {
 fn implements_traits() {
     fn foo<T>(_t: T)
     where
-        T: std::fmt::Debug + Clone + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash,
+        T: std::fmt::Debug
+            + Clone
+            + PartialEq
+            + Eq
+            + PartialOrd
+            + Ord
+            + std::hash::Hash
+            + AsRef<[u8]>
+            + AsMut<[u8]>,
     {
     }
 
