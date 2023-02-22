@@ -168,8 +168,8 @@ mod tests {
 
     #[test]
     fn parses_with_leading_0x() {
-        let byte_array: ByteArray<HexString, 2> = from_value(json!("0x00")).unwrap();
-        assert_eq!(byte_array, [0, 0]);
+        let byte_array: ByteArray<HexString, 1> = from_value(json!("0x00")).unwrap();
+        assert_eq!(byte_array, [0]);
     }
 
 }
