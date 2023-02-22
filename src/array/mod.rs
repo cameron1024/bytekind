@@ -10,10 +10,20 @@ mod serde;
 
 /// A wrapper around `[u8; N]` that allows control over the serialization format
 #[derive(Copy)]
-#[cfg_attr(kani, derive(kani::Arbitrary))]
 pub struct ByteArray<F: Format, const N: usize> {
     inner: [u8; N],
     _marker: PhantomData<F>,
+}
+
+// when PhantomData: Arbitrary, we can derive this instead
+#[cfg(kani)]
+impl<F: Format, const N: usize> kani::Arbitrary for ByteArray<F, N> {
+    fn any() -> Self {
+        Self {
+            inner: kani::any(),
+            _marker: PhantomData,
+        }
+    }
 }
 
 impl<F: Format, const N: usize> Debug for ByteArray<F, N> {
