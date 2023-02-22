@@ -60,7 +60,7 @@ mod hex_impl {
                 where
                     E: serde::de::Error,
                 {
-                    hex::decode(v).map_err(E::custom)
+                    hex::decode(v.trim_start_matches("0x")).map_err(E::custom)
                 }
             }
 

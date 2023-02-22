@@ -105,7 +105,7 @@ mod hex_impl {
                     E: serde::de::Error,
                 {
                     let mut buf = [0; N];
-                    hex::decode_to_slice(v, &mut buf).map_err(E::custom)?;
+                    hex::decode_to_slice(v.trim_start_matches("0x"), &mut buf).map_err(E::custom)?;
                     Ok(buf)
                 }
             }

@@ -141,7 +141,9 @@ impl<F: Format, const N: usize> AsMut<[u8; N]> for ByteArray<F, N> {
 
 #[cfg(test)]
 mod tests {
-    use crate::Plain;
+    use serde_json::{from_value, json};
+
+    use crate::{Plain, HexString};
 
     use super::*;
 
@@ -163,4 +165,11 @@ mod tests {
         let fourth = byte_array == byte_array;
         assert!(fourth);
     }
+
+    #[test]
+    fn parses_with_leading_0x() {
+        let byte_array: ByteArray<HexString, 2> = from_value(json!("0x00")).unwrap();
+        assert_eq!(byte_array, [0, 0]);
+    }
+
 }
