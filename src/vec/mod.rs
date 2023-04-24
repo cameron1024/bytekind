@@ -73,7 +73,7 @@ impl<F: Format> From<Vec<u8>> for Bytes<F> {
 impl<F: Format> From<Bytes<F>> for Vec<u8> {
     #[inline]
     fn from(bytes: Bytes<F>) -> Self {
-        bytes.inner 
+        bytes.inner
     }
 }
 
@@ -153,6 +153,12 @@ impl<F: Format> Ord for Bytes<F> {
 impl<F: Format> Hash for Bytes<F> {
     fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
         Vec::<u8>::hash(&self.inner, state)
+    }
+}
+
+impl<F: Format> Default for Bytes<F> {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

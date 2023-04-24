@@ -15,17 +15,6 @@ pub struct ByteArray<F: Format, const N: usize> {
     _marker: PhantomData<F>,
 }
 
-// when PhantomData: Arbitrary, we can derive this instead
-#[cfg(kani)]
-impl<F: Format, const N: usize> kani::Arbitrary for ByteArray<F, N> {
-    fn any() -> Self {
-        Self {
-            inner: kani::any(),
-            _marker: PhantomData,
-        }
-    }
-}
-
 impl<F: Format, const N: usize> Debug for ByteArray<F, N> {
     fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
         f.debug_struct("ByteArray")
@@ -36,7 +25,7 @@ impl<F: Format, const N: usize> Debug for ByteArray<F, N> {
 impl<F: Format, const N: usize> Clone for ByteArray<F, N> {
     fn clone(&self) -> Self {
         Self {
-            inner: self.inner.clone(),
+            inner: self.inner,
             _marker: PhantomData,
         }
     }
@@ -97,7 +86,7 @@ impl<F: Format, const N: usize> From<[u8; N]> for ByteArray<F, N> {
 
 impl<F: Format, const N: usize> From<ByteArray<F, N>> for [u8; N] {
     fn from(array: ByteArray<F, N>) -> Self {
-        array.inner 
+        array.inner
     }
 }
 
@@ -143,7 +132,7 @@ impl<F: Format, const N: usize> AsMut<[u8; N]> for ByteArray<F, N> {
 mod tests {
     use serde_json::{from_value, json};
 
-    use crate::{Plain, HexString};
+    use crate::{HexString, Plain};
 
     use super::*;
 
@@ -171,5 +160,4 @@ mod tests {
         let byte_array: ByteArray<HexString, 1> = from_value(json!("0x00")).unwrap();
         assert_eq!(byte_array, [0]);
     }
-
 }
